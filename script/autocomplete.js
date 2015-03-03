@@ -25,6 +25,10 @@ app.directive('autocomplete', function () {
                 $scope.selectedIndex = i;
             };
 
+            $scope.isActive = function(group, $index, selectedIndex){
+                return group + $index == group + selectedIndex;
+            };
+
             this.setIndex = function (i) {
                 $scope.setIndex(i);
                 $scope.$apply();
@@ -272,7 +276,7 @@ app.directive('autocomplete', function () {
                   ng-repeat="suggestion in children"\
                   index="{{ group + $index }}"\
                   val="{{ suggestion.value }}"\
-                  ng-class="{ active: (group + $index == selectedIndex) }"\
+                  ng-class="{ active: isActive(group, $index, selectedIndex) }"\
                   ng-click="select(suggestion.value)"\
                   ng-bind-html="suggestion.value | highlight:searchParam"></li>\
               </ul>\
