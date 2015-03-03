@@ -17,6 +17,8 @@ app.directive('autocomplete', function () {
         controller: ['$scope', function ($scope) {
             // the index of the suggestions that's currently selected
             $scope.selectedIndex = -1;
+            $scope.selectedGroup = 'g';
+            $scope.ulCount = 1;
 
             $scope.initLock = true;
 
@@ -25,8 +27,8 @@ app.directive('autocomplete', function () {
                 $scope.selectedIndex = i;
             };
 
-            $scope.isActive = function(group, $index, selectedIndex){
-                return group + $index == group + selectedIndex;
+            $scope.setGroup = function (g) {
+                $scope.selectedGroup = g;
             };
 
             this.setIndex = function (i) {
@@ -170,6 +172,7 @@ app.directive('autocomplete', function () {
             element[0].addEventListener("keydown", function (e) {
                 var keycode = e.keyCode || e.which;
 
+                var ul = angular.element(this).find('ul');
                 var l = angular.element(this).find('li').length;
 
                 // this allows submitting forms by pressing Enter in the autocompleted field
@@ -181,7 +184,7 @@ app.directive('autocomplete', function () {
 
                         index = scope.getIndex() - 1;
                         if (index < -1) {
-                            index = l - 1;
+                            index = (l - 1);
                         } else if (index >= l) {
                             index = -1;
                             scope.setIndex(index);
@@ -189,6 +192,20 @@ app.directive('autocomplete', function () {
                             break;
                         }
                         scope.setIndex(index);
+
+                        var i = 0;
+                        for(var j in angular.element(this).find('li')){
+                            var child = angular.element(this).find('li')[j];
+                            if(typeof child == 'object'){
+                                if(angular.element(child) &&  angular.element(child).hasClass('active')){
+                                    angular.element(child).removeClass('active');
+                                }
+                                if(i == index){
+                                    angular.element(child).addClass('active');
+                                }
+                                i++;
+                            }
+                        }
 
                         if (index !== -1)
                             scope.preSelect(angular.element(angular.element(this).find('li')[index]).text());
@@ -199,15 +216,32 @@ app.directive('autocomplete', function () {
                     case key.down:
                         index = scope.getIndex() + 1;
                         if (index < -1) {
-                            index = l - 1;
+                            index = (l - 1);
                         } else if (index >= l) {
                             index = -1;
                             scope.setIndex(index);
+                            scope.setGroup(angular.element(angular.element(this).find('li')[index]).attr('group'));
                             scope.preSelectOff();
                             scope.$apply();
                             break;
                         }
                         scope.setIndex(index);
+                        scope.setGroup(angular.element(angular.element(this).find('li')[index]).attr('group'));
+
+                        var i = 0;
+                        for(var j in angular.element(this).find('li')){
+                            var child = angular.element(this).find('li')[j];
+                            if(typeof child == 'object'){
+                                console.log(index, i);
+                                if(angular.element(child) &&  angular.element(child).hasClass('active')){
+                                    angular.element(child).removeClass('active');
+                                }
+                                if(i == index){
+                                    angular.element(child).addClass('active');
+                                }
+                                i++;
+                            }
+                        }
 
                         if (index !== -1)
                             scope.preSelect(angular.element(angular.element(this).find('li')[index]).text());
@@ -263,7 +297,7 @@ app.directive('autocomplete', function () {
               ng-repeat="suggestion in suggestions | filter:searchFilter | orderBy:\'toString()\' track by $index"\
               index="{{ $index }}"\
               val="{{ suggestion }}"\
-              ng-class="{ active: ($index == selectedIndex) }"\
+              group="g"\
               ng-click="select(suggestion)"\
               ng-bind-html="suggestion | highlight:searchParam"></li>\
           </ul>\
@@ -276,7 +310,7 @@ app.directive('autocomplete', function () {
                   ng-repeat="suggestion in children"\
                   index="{{ group + $index }}"\
                   val="{{ suggestion.value }}"\
-                  ng-class="{ active: isActive(group, $index, selectedIndex) }"\
+                  group="{{ group }}"\
                   ng-click="select(suggestion.value)"\
                   ng-bind-html="suggestion.value | highlight:searchParam"></li>\
               </ul>\
