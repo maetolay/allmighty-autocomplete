@@ -343,12 +343,11 @@ app.directive('suggestion', function () {
         require: '^autocomplete', // ^look for controller on parents element
         link: function (scope, element, attrs, autoCtrl) {
             element.bind('mouseenter', function () {
-                autoCtrl.preSelect(attrs.val);
-                autoCtrl.setIndex(attrs.index);
+                angular.element(element).addClass('active');
             });
 
             element.bind('mouseleave', function () {
-                autoCtrl.preSelectOff();
+                angular.element(element).removeClass('active');
             });
         }
     };
