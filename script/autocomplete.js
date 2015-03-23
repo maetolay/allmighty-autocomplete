@@ -64,7 +64,9 @@ app.directive('autocomplete', function () {
                     $scope.onType($scope.searchParam);
                 }
 
-                $scope.$apply();
+                if(!$scope.$$phase) {
+                    $scope.$apply();
+                }
             });
 
             // for hovering over suggestions
