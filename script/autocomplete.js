@@ -145,8 +145,10 @@ app.directive('autocomplete', function () {
 
             if (attrs.clickActivation) {
                 element[0].onclick = function (e) {
-                    scope.completing = true;
-                    scope.$apply();
+                    setTimeout(function(){
+                        scope.completing = true;
+                        scope.$apply();
+                    }, 0);
                 };
             }
 
@@ -296,7 +298,7 @@ app.directive('autocomplete', function () {
             class="{{ attrs.inputclass }}"\
             id="{{ attrs.inputid }}"\
             ng-required="{{ autocompleteRequired }}" />\
-          <ul class="list" ng-if="!isGroup()" ng-show="completing">\
+          <ul class="list" ng-if="!isGroup()" ng-show="completing && (suggestions | filter:searchFilter).length > 0">\
             <li\
               suggestion\
               ng-repeat="suggestion in suggestions | filter:searchFilter | orderBy:\'toString()\' track by $index"\
@@ -306,7 +308,7 @@ app.directive('autocomplete', function () {
               ng-click="select(suggestion)"\
               ng-bind-html="suggestion | highlight:searchParam"></li>\
           </ul>\
-          <div ng-if="isGroup()" class="list" ng-show="completing">\
+          <div ng-if="isGroup()" class="list" ng-show="completing && (suggestions | filter:searchFilter).length > 0">\
               <div  ng-repeat="(group, children) in suggestions | filter:searchFilter | groupBy:\'group\'  track by $index">\
               <h2>{{ group }}</h2>\
               <ul>\
