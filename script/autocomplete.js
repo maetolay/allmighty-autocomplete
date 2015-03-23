@@ -14,7 +14,7 @@ app.directive('autocomplete', function () {
             onSelect: '=onSelect',
             autocompleteRequired: '='
         },
-        controller: ['$scope', function ($scope) {
+        controller: ['$scope', '$rootScope', function ($scope, $rootScope) {
             // the index of the suggestions that's currently selected
             $scope.selectedIndex = -1;
             $scope.selectedGroup = 'g';
@@ -64,7 +64,7 @@ app.directive('autocomplete', function () {
                     $scope.onType($scope.searchParam);
                 }
 
-                if(!$scope.$$phase) {
+                if(!$rootScope.$$phase) {
                     $scope.$apply();
                 }
             });
