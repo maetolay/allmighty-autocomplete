@@ -60,8 +60,11 @@ app.directive('autocomplete', function () {
                 }
 
                 // function thats passed to on-type attribute gets executed
-                if ($scope.onType)
+                if ($scope.onType) {
                     $scope.onType($scope.searchParam);
+                }
+
+                $scope.$apply();
             });
 
             // for hovering over suggestions
@@ -162,7 +165,7 @@ app.directive('autocomplete', function () {
                     scope.select();
                     scope.setIndex(-1);
                     scope.$apply();
-                }, 500);
+                }, 150);
             }, true);
 
             element[0].addEventListener("keydown", function (e) {
