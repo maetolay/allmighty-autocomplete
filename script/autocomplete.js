@@ -14,7 +14,7 @@ app.directive('autocomplete', function () {
             onSelect: '=onSelect',
             autocompleteRequired: '='
         },
-        controller: ['$scope', '$rootScope', function ($scope, $rootScope) {
+        controller: ['$scope', '$rootScope', '$timeout', function ($scope, $rootScope, $timeout) {
             // the index of the suggestions that's currently selected
             $scope.selectedIndex = -1;
             $scope.selectedGroup = 'g';
@@ -66,6 +66,11 @@ app.directive('autocomplete', function () {
 
                 if(!$rootScope.$$phase) {
                     $scope.$apply();
+                }
+                else{
+                    $timeout(function(){
+                        $scope.$apply();
+                    });
                 }
             });
 
