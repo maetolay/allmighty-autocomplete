@@ -135,12 +135,8 @@ app.directive('autocomplete', function () {
 
             if (attrs.clickActivation) {
                 element[0].onclick = function (e) {
-                    if (!scope.searchParam) {
-                        setTimeout(function () {
-                            scope.completing = true;
-                            scope.$apply();
-                        }, 200);
-                    }
+                    scope.completing = true;
+                    scope.$apply();
                 };
             }
 
@@ -166,7 +162,7 @@ app.directive('autocomplete', function () {
                     scope.select();
                     scope.setIndex(-1);
                     scope.$apply();
-                }, 150);
+                }, 500);
             }, true);
 
             element[0].addEventListener("keydown", function (e) {
@@ -232,7 +228,6 @@ app.directive('autocomplete', function () {
                         for(var j in angular.element(this).find('li')){
                             var child = angular.element(this).find('li')[j];
                             if(typeof child == 'object'){
-                                console.log(index, i);
                                 if(angular.element(child) &&  angular.element(child).hasClass('active')){
                                     angular.element(child).removeClass('active');
                                 }
@@ -291,7 +286,7 @@ app.directive('autocomplete', function () {
             class="{{ attrs.inputclass }}"\
             id="{{ attrs.inputid }}"\
             ng-required="{{ autocompleteRequired }}" />\
-          <ul class="list" ng-if="!isGroup()" ng-show="completing && (suggestions | filter:searchFilter).length > 0">\
+          <ul class="list" ng-if="!isGroup()" ng-show="completing">\
             <li\
               suggestion\
               ng-repeat="suggestion in suggestions | filter:searchFilter | orderBy:\'toString()\' track by $index"\
@@ -301,7 +296,7 @@ app.directive('autocomplete', function () {
               ng-click="select(suggestion)"\
               ng-bind-html="suggestion | highlight:searchParam"></li>\
           </ul>\
-          <div ng-if="isGroup()" class="list" ng-show="completing && (suggestions | filter:searchFilter).length > 0">\
+          <div ng-if="isGroup()" class="list" ng-show="completing">\
               <div  ng-repeat="(group, children) in suggestions | filter:searchFilter | groupBy:\'group\'  track by $index">\
               <h2>{{ group }}</h2>\
               <ul>\
