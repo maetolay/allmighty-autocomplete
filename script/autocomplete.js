@@ -146,6 +146,7 @@ app.directive('autocomplete', function () {
             if (attrs.clickActivation) {
                 element[0].onclick = function (e) {
                     setTimeout(function(){
+                        scope.searchFilter = '';
                         scope.completing = true;
                         scope.$apply();
                     }, 0);
