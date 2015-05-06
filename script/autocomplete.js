@@ -12,7 +12,8 @@ app.directive('autocomplete', function () {
             suggestions: '=data',
             onType: '=onType',
             onSelect: '=onSelect',
-            autocompleteRequired: '='
+            autocompleteRequired: '=',
+            autoPlaceholder: '='
         },
         controller: ['$scope', '$rootScope', '$timeout', function ($scope, $rootScope, $timeout) {
             // the index of the suggestions that's currently selected
@@ -127,7 +128,7 @@ app.directive('autocomplete', function () {
 
             // Default atts
             scope.attrs = {
-                "placeholder": "start typing...",
+                "placeholder": "",
                 "class": "",
                 "id": "",
                 "inputclass": "",
@@ -295,7 +296,7 @@ app.directive('autocomplete', function () {
           <input\
             type="text"\
             ng-model="searchParam"\
-            placeholder="{{ attrs.placeholder }}"\
+            placeholder="{{ autoPlaceholder }}"\
             class="{{ attrs.inputclass }}"\
             id="{{ attrs.inputid }}"\
             ng-required="{{ autocompleteRequired }}" />\
