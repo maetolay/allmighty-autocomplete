@@ -65,11 +65,11 @@ app.directive('autocomplete', function () {
                     $scope.onType($scope.searchParam);
                 }
 
-                if(!$rootScope.$$phase) {
+                if (!$rootScope.$$phase) {
                     $scope.$apply();
                 }
-                else{
-                    $timeout(function(){
+                else {
+                    $timeout(function () {
                         $scope.$apply();
                     });
                 }
@@ -113,7 +113,7 @@ app.directive('autocomplete', function () {
                 $scope.setIndex(-1);
             };
 
-            $scope.isGroup = function(){
+            $scope.isGroup = function () {
                 return angular.isObject($scope.suggestions[0]);
             }
         }],
@@ -146,11 +146,13 @@ app.directive('autocomplete', function () {
 
             if (attrs.clickActivation) {
                 element[0].onclick = function (e) {
-                    setTimeout(function(){
-                        scope.searchFilter = '';
-                        scope.completing = true;
-                        scope.$apply();
-                    }, 0);
+                    if (angular.element(e.target).is('input')) {
+                        setTimeout(function () {
+                            scope.searchFilter = '';
+                            scope.completing = true;
+                            scope.$apply();
+                        }, 0);
+                    }
                 };
             }
 
@@ -204,13 +206,13 @@ app.directive('autocomplete', function () {
                         scope.setIndex(index);
 
                         var i = 0;
-                        for(var j in angular.element(this).find('li')){
+                        for (var j in angular.element(this).find('li')) {
                             var child = angular.element(this).find('li')[j];
-                            if(typeof child == 'object'){
-                                if(angular.element(child) &&  angular.element(child).hasClass('active')){
+                            if (typeof child == 'object') {
+                                if (angular.element(child) && angular.element(child).hasClass('active')) {
                                     angular.element(child).removeClass('active');
                                 }
-                                if(i == index){
+                                if (i == index) {
                                     angular.element(child).addClass('active');
                                 }
                                 i++;
@@ -239,13 +241,13 @@ app.directive('autocomplete', function () {
                         scope.setGroup(angular.element(angular.element(this).find('li')[index]).attr('group'));
 
                         var i = 0;
-                        for(var j in angular.element(this).find('li')){
+                        for (var j in angular.element(this).find('li')) {
                             var child = angular.element(this).find('li')[j];
-                            if(typeof child == 'object'){
-                                if(angular.element(child) &&  angular.element(child).hasClass('active')){
+                            if (typeof child == 'object') {
+                                if (angular.element(child) && angular.element(child).hasClass('active')) {
                                     angular.element(child).removeClass('active');
                                 }
-                                if(i == index){
+                                if (i == index) {
                                     angular.element(child).addClass('active');
                                 }
                                 i++;
